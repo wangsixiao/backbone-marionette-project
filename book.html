@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8"/>
+</head>
+<body>
+
+<div id="contanier"></div>
+<script type="text/template" id="my-template">
+    <div class="row">
+        <label>name:</label>
+        <span><%= name %></span>
+    </div>
+</script>
+
+<script type="text/javascript" src="./jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="./underscore-min.js"></script>
+<script type="text/javascript" src="./backbone.js"></script>
+<script type="text/javascript">
+    $(function(){
+        var NameModel=new Backbone.Model({
+            name: 'qwe',
+        });
+        var NameView = Backbone.View.extend({
+            el: "#contanier",
+            initialize: function(options) {
+                this.render();
+            },
+            render: function(){
+                name = this.model.get("name");
+                var template = _.template($("#my-template").html());
+                this.$el.html(template);
+            }
+        });
+        var namen = new NameView({
+            model: NameModel
+        })
+    })
+</script>
+</body>
+</html>
