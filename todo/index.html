@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>backboneJS train</title>
+  <meta charset='utf-8'/>
+  <link rel="stylesheet" type="text/css" href="todo.css">
+</head>
+<body>
+<div id="todoapp">
+  <header>
+    <h1>Todos</h1>
+    <input type="text" id="new-todo" placeholder="new todo">
+  </header>
+  <section id="main">
+    <input type="checkbox" id="toggle-all" name="">
+    <label for="toggle-all">Mark all</label>
+    <ul id="todo-list"></ul>
+  </section>
+  <footer>
+    
+  </footer>
+</div>
+  <script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+  <script type="text/javascript" src="../underscore-min.js"></script>
+  <script type="text/javascript" src="../backbone.js"></script>
+  <script src="../backbone.localStorage.js"></script>
+  <script type="text/javascript" src="todo.js"></script>
+
+<!-- 添加li的模板 -->
+<script type="text/template" id="add-todo">
+  <!-- <li> -->
+    <div id="view">
+      <input type="checkbox" id="item" <%= done ? 'checked="checked"' : '' %>/>
+      <label><%- title %></label>
+      <a id="destroy">clear</a>
+    </div>
+    <input type="text" id="modify" name="">
+  <!-- </li> -->
+</script>
+
+<!-- footer里的数量计算模板 -->
+<script type="text/template" id="cal-amount">
+  <a id="clear-completed">Clear <%= done %> completed</a>
+  <div id="todo-count"><%= remaining %> left</div>
+</script>
+
+</body>
+</html>

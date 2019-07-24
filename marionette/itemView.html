@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8"/>
+</head>
+<body>
+<div id="container"></div>
+<button>click</button>
+<script type="text/template" id="static-template">
+	<p>it just test</p>
+</script>
+<script type="text/template" id="diff-static-template">
+	<h1>differ static template</h1>
+	<p>firstName: <%= firstName%></p>
+	<p>lastName: <%= lastName%></p>
+	<button>click</button>
+</script>
+
+
+<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../underscore-min.js"></script>
+<script type="text/javascript" src="../backbone.js"></script>
+<script type="text/javascript" src="../backbone.marionette.js"></script>
+
+<script type="text/javascript">
+	$(function(){
+		// model
+		var ContactModel = Backbone.Model.extend({
+			defaults:{
+				firstName: "qww"
+			}
+		});
+		// 先new一个Application实例对象
+		var ContactManager = new Marionette.Application();
+		// 使用addRegions方法 去获取需要管理的元素 
+		// 相当于jquery选择器 展示view
+		ContactManager.addRegions({
+			container: "#container"
+		});
+		// 定义一个ItemView 在里边获取需要处理的模板
+		ContactManager.StaticView = Marionette.ItemView.extend({
+			template: "#static-template",
+			events: {
+				"click button" : "promptinfo"
+			},
+			promptinfo: function(){
+				console.log("just tets")
+			}
+		});
+		// 绑定一个事件 去new一个ItemView的实例 
+		// 调用show方法在指定获取的dom元素中渲染模板
+		ContactManager.on("initialize:after",function(){
+			var alice = new ContactModel({
+				lastName: "arten"
+			})
+			var staticView = new ContactManager.StaticView({
+				template: "#diff-static-template",
+				model: alice
+			});
+			ContactManager.container.show(staticView);
+		});
+		ContactManager.start();
+	})
+</script>
+
+</body>
+</html>

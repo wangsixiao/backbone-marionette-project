@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CollectionView</title>
+	<meta charset="utf-8"/>
+</head>
+<body>
+
+<div class='container'></div>
+<script type="text/template" id="contact-list-view">
+	<%= school %> <%= name %>
+</script>
+
+<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../underscore-min.js"></script>
+<script type="text/javascript" src="../backbone.js"></script>
+<script type="text/javascript" src="../backbone.marionette.js"></script>
+
+<script type="text/javascript">
+	$(function(){
+		// model
+		var contactModel = Backbone.Model.extend({});
+		// collection
+		var contactCollection = Backbone.Collection.extend({
+			model: contactModel,
+			// Collection attribute : in order
+			comparator: "name"
+		});
+		// Application
+		var contactManager = new Marionette.Application();
+		// addRegions
+		contactManager.addRegions({
+			container: ".container"
+		});
+		// ItemView
+		contactItemView = Marionette.ItemView.extend({
+			tagName: "li",
+			template: "#contact-list-view"
+		});
+		// CollectionView
+		contactCollectionView = Marionette.CollectionView.extend({
+			itemView: contactItemView,
+			tagName: 'ol'
+		});
+		// 绑定事件
+		contactManager.on("initialize:after",function(){
+			// new 一个backbone collection实例 承载数据
+			var contacts = new contactCollection([
+				{
+					school: 'shenshi',
+					name: 'qwe'
+				},
+				{
+					school: "shenhang",
+					name: "asd"
+				},
+				{
+					school: "shengong",
+					name: "zxc"
+				}
+			]);
+			// new CollectionView
+			var contactsListView = new contactCollectionView({
+				collection: contacts
+			});
+			// show
+			contactManager.container.show(contactsListView);
+		});
+		// start
+		contactManager.start();
+	})
+</script>
+</body>
+</html>

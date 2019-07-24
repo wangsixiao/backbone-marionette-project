@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>layout</title>
+	<meta charset="utf-8"/>
+	<link rel="stylesheet" type="text/css" href="layout.css">
+</head>
+<body>
+<div id="main-region" class="container">
+	<p>static content</p>
+</div>
+<div id="dialog-region"></div>
+
+<table class="table-list"></table>
+
+<!-- table template -->
+<script type="text/template" id="tr-list">
+	<td><%= name %></td>
+	<td><%= age %></td>
+	<td>
+		<button class="delete">delete</button>
+	</td>
+</script>
+<!-- add new button -->
+<script type="text/template" id="contact-list-layout">
+	<div id="panel-region"></div>
+	<div id="contacts-region"></div>
+</script>
+<script type="text/template" id="contact-list-panel">
+	<button class="new">New contact</button>
+</script>
+
+<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../underscore-min.js"></script>
+<script type="text/javascript" src="../backbone.js"></script>
+<script type="text/javascript" src="../backbone.marionette.js"></script>
+
+<script type="text/javascript">
+	$(function(){
+		// Application
+		var contactManager = new Marionette.Application();
+		// addRegions
+		contactManager.addRegions({
+			mainRegion: "#main-region",
+			dialogRegion: "#dialog-region"
+		});
+		// Model
+		listModel = Backbone.Model.extend({});
+		// Collection
+		listCollection = Backbone.Collection.extend({
+			model: listModel
+		});
+		// ItemView
+		Contact = Marionette.ItemView.extend({
+			tagName: "tr",
+			template: "#tr-list"
+		})
+		// CollectionView
+		Contacts = Marionette.CollectionView.extend({
+			tagName: "table",
+			className: "table-list",
+			itemView: Contact
+		});
+		
+		// layout
+		contactManager.module("appList", function(List,contactManager,Backbone,Marionette,$,_){
+			// Layout
+			layout = Marionette.Layout.extend({
+				template: "#contact-list-layout",
+				regions: {
+					panelRegion: "#panel-region",
+					contactsRegion: "#contacts-region"
+				}
+			});
+			// ItemView
+			Panel = Marionette.ItemView.extend({
+				template: "#contact-list-panel"
+			});
+			// new collection
+			var contacts = new listCollection([
+				{
+					name: "qwe",
+					age: 12
+				},
+				{
+					name: "ewx",
+					age: 31
+				},
+				{
+					name: "dss",
+					age: 22
+				}
+			]);
+			//  Controller
+			Controller = {
+				listContacts: function(){
+					var LoadingView = new contactManager.Common.Views.Loading();
+				contactManager.mainRegion.show(LoadingView);
+
+				var fetchingContacts = contactManager.request("contact:entities");
+
+				var contactListLayout = new layout();
+				var contactListPanel = new Panel();
+
+				$.when(fetchingContacts).done(function(contacts){
+					var contactsListView = new Contacts({
+						collection: contacts
+					})
+				});
+				// on 
+				contactListLayout.on("show",function(){
+					contactListLayout.panelRegion.show(contactListPanel);
+					contactListLayout.contactsRegion.show(contactsListView);
+				});
+				contactManager.mainRegion.show(contactListLayout);
+				}
+			}
+		});
+		contactManager.start();
+
+	})
+</script>
+</body>
+</html>

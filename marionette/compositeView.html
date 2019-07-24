@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>CompositeView</title>
+	<meta charset="utf-8"/>
+	<style type="text/css">
+		.warning{
+			background: red;
+		}
+	</style>
+</head>
+<body>
+<div class="container"></div>
+<table class="table-list"></table>
+<script type="text/template" id="tr-list">
+	<td><%= name %></td>
+	<td><%= age %></td>
+	<td>
+		<button class="delete">delete</button>
+	</td>
+</script>
+<script type="text/template" id="th-list">
+	<thead>
+		<tr>
+			<th>name</th>
+			<th>age</th>
+		</tr>
+	</thead>
+</script>
+
+<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../underscore-min.js"></script>
+<script type="text/javascript" src="../backbone.js"></script>
+<script type="text/javascript" src="../backbone.marionette.js"></script>
+
+<script type="text/javascript">
+	$(function(){
+		// Application
+		listManager = new Marionette.Application();
+		// addRegions
+		listManager.addRegions({
+			container: ".container"
+		})
+		// Model
+		listModel = Backbone.Model.extend({});
+		// Collection
+		listCollection = Backbone.Collection.extend({
+			model: listModel
+		})
+		// ItemView
+		listItemView = Marionette.ItemView.extend({
+			template: "#tr-list",
+			tagName: "tr",
+			events: {
+				"click" : "highlightName",
+				"click .delete" : "deletelick"
+			},
+			highlightName: function(e){
+				e.preventDefault();
+				this.$el.toggleClass("warning");
+			},
+			deletelick: function(e){
+				e.stopPropagation();
+				this.model.collection.remove(this.model);
+			},
+			remove: function(){
+				// this.$el.fadeOut();
+				var self = this;
+				this.$el.fadeOut(function(){
+					Marionette.ItemView.prototype.remove.call(self);
+				})
+			}
+		});
+		// CollectionView
+		listCollectionView = Marionette.CollectionView.extend({
+			tagName: "table",
+			className: "table-list",
+			itemView: listItemView
+		});
+		// CompositeView
+		listCompositeView = Marionette.CompositeView.extend({
+			tagName: "table",
+			className: "table-list",
+			template: "#th-list",
+			itemView: listItemView,
+			// 将在tbody里render view
+			// itemViewContainer: "tbody"
+		});
+		listManager.on("initialize:after",function(){
+			// new collection
+			var contacts = new listCollection([
+				{
+					name: "qwe",
+					age: 12
+				},
+				{
+					name: "ewx",
+					age: 31
+				},
+				{
+					name: "dss",
+					age: 22
+				}
+			]);
+			// CompositeView
+			var listView = new listCompositeView({
+				collection: contacts
+			});
+			listManager.container.show(listView);
+		});
+		listManager.start();
+	})
+</script>
+</body>
+</html>

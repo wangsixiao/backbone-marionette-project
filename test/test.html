@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8"/>
+</head>
+<body>
+<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../underscore-min.js"></script>
+<script type="text/javascript" src="../backbone.js"></script>
+<script type="text/javascript">
+	$(function(){
+		var Book = Backbone.Model.extend({
+			defaults: { 
+				name: 'defaults'
+			}
+		});
+		var models = [{
+			name: 'a'
+		},
+		{
+			name: 'b'
+		},
+		{
+			name: 'c'
+		}];
+		
+		var books = new Backbone.Collection(models,{
+			model: Book
+		})
+		console.log(books);
+	})
+</script>
+</body>
+</html>

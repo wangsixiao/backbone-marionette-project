@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>module</title>
+	<meta charset="utf-8"/>
+</head>
+<body>
+<div class="container"></div>
+<script type="text/template" id="items">
+	<p>hello world</p>
+	<p><%= name %></p>
+	<button id="click">click</button>
+</script>
+<script type="text/template" id="contact-list-item">
+	<li><%= info %></li>
+</script>
+<script type="text/javascript" src="../jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../underscore-min.js"></script>
+<script type="text/javascript" src="../backbone.js"></script>
+<script type="text/javascript" src="../backbone.marionette.js"></script>
+<script type="text/javascript">
+	$(function(){
+		var contactModel = Backbone.Model.extend({});
+		var contactCollection = Backbone.Collection.extend({
+			model: contactModel
+		})
+		var manage = new Marionette.Application();
+		manage.addRegions({
+			container: ".container"
+		});
+		var contactItemView = Marionette.ItemView.extend({
+			template: "#contact-list-item",
+		});
+		var contactCollectionView = Marionette.CollectionView.extend({
+			tagName: 'ul',
+			itemView: contactItemView
+		})
+		manage.on("initialize:after",function(){
+			var alice = new contactCollection([
+					{
+						info: 'qwe'
+					},
+					{
+						info: 'asd'
+					},
+					{
+						info: 'zxc'
+					}
+				]);
+			var staticView = new contactCollectionView({
+				collection: alice
+			});
+			manage.container.show(staticView);
+		});
+		manage.start();
+	})
+</script>
+</body>
+</html>

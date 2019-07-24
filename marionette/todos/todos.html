@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>todos</title>
+	<meta charset="utf-8"/>
+	<link rel="stylesheet" type="text/css" href="style/base.css">
+	<link rel="stylesheet" type="text/css" href="style/custom.css">
+</head>
+<body>
+<div class="container">
+	<section id="todoapp">
+		<header id="header"></header>
+		<section id="main"></section>
+		<footer id="footer"></footer>
+	</section>
+</div>
+<!-- template start -->
+<!-- header -->
+<script type="text/template" id="list-header">
+	<h1>Todos</h1>
+	<input type="text" id="new-todo" placeholder="add li" autofocus>
+</script>
+<!-- footer -->
+<script type="text/template" id="list-footer">
+	<span id="todo-count">
+		<strong></strong> items left
+	</span>
+	<button id="clear-completed">Clear completed</button>
+</script>
+<!-- 添加ul -->
+<script type="text/template" id="list-compositeView">
+	<ul id="todo-list"></ul>
+</script>
+<!-- 添加li -->
+<script type="text/template" id="todoItemView">
+	<div class="view">
+		<input type="checkbox" class="toggle" <%= completed ? 'checked="checked"' : '' %>/>
+		<label><%= title %></label>
+		<button class="destroy"></button>
+	</div>
+	<input type="text" value="" class="edit">
+</script>
+<!-- template end -->
+<script type="text/javascript" src="../../jquery-3.2.1.min.js"></script>
+<script type="text/javascript" src="../../underscore-min.js"></script>
+<script type="text/javascript" src="../../backbone.js"></script>
+<script type="text/javascript" src="../../backbone.marionette.js"></script>
+<script type="text/javascript" src="todo.js"></script>
+</body>
+</html>
